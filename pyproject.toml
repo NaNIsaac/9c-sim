@@ -1,7 +1,7 @@
 [project]
 name = "9c-sim"
 version = "0.1.0"
-description = "Add your description here"
+description = "Motor soft limits and the sample kinematic chain of the 9C beamline diffractometer"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
