@@ -1,11 +1,33 @@
 # 9c-sim
 
-A small model of the sample stage of the 9C beamline diffractometer, as it stands now (2026-10-23):
+A small kinematic model of the sample stage of the PAL 9C beamline diffractometer, as it stands now (2026-10-23). It exists to answer one question in code: given the positions of the sample motors, where is the sample origin in the laboratory frame? The rocking-scan simulator that needs this is a separate repository (rocking_xrd_sim).
 
 - `motor.py`: `Motor` (pydantic) with a position and soft limits that are checked on every assignment; `BeamlineState` with the six motors `th`, `phi`, `chi`, `shold`, `sx`, `sy`; `MotorManager` with `move`, `get_pos` and a `wh` printout.
-- `sample.py`: `Sample.get_global_pos`, the 4x4 homogeneous kinematic chain Lab <- th <- chi <- phi <- translation (sx, sy + shold) applied to the sample origin.
+- `sample.py`: `Sample.get_global_pos`, the 4x4 homogeneous kinematic chain applied to the sample origin.
 
-No 9C limit values are set: every motor defaults to minus to plus infinity, so the limit check only fires for limits you pass yourself. There is no diffraction calculation here; the rocking-scan simulator is a separate repository (rocking_xrd_sim).
+There is no detector arm, no q calculation and no diffraction calculation here. No 9C limit values are set: every motor defaults to minus to plus infinity, so the limit check only fires for limits you pass yourself.
+
+## Geometry convention
+
+`get_global_pos` returns `T(th) T(chi) T(phi) T(translation)` applied to the sample origin `(0, 0, 0, 1)`, which is the chain `Lab <- th <- chi <- phi <- translation <- Sample`. Angles are in degrees; each rotation is right-handed about the axis named in the table, written in the frame of the stage it moves; lengths are in the unit of the motor positions (the code does not define one).
+
+| Step | Motor | Operation |
+|---|---|---|
+| 1 (outermost) | `th` | rotation about the lab `y` axis by `th` |
+| 2 | `chi` | rotation about `z` by `chi - 90` |
+| 3 | `phi` | rotation about `y` by `phi` |
+| 4 (innermost) | `sx`, `sy`, `shold` | translation by `(0, sy + shold, sx)`: `sx` moves along `z`, `sy` and `shold` both along `y` |
+
+## Not established
+
+The code is checked against its own chain (below). These points are **not** checked against the real instrument, because the facts about the 9C stage have not been supplied yet (open decision #2 in the author's decision list, "PAL 9C diffractometer geometry"):
+
+- which lab axis is the beam, the vertical and the horizontal;
+- the sign of each motor;
+- why `chi` carries a 90 degree offset;
+- whether `sx` is along `z` and `sy` and `shold` along the same `y` on the real stage.
+
+Treat positions from this model as the model's, not as 9C positions, until those four are confirmed.
 
 ## Run
 
@@ -15,3 +37,28 @@ uv run sample.py
 ```
 
 This moves `shold` to 0.05 and `phi` to 180 and prints the sample origin in the lab frame, `[0.05, ~0, 0, 1]`.
+
+## Test
+
+```bash
+uv run --with pytest pytest
+```
+
+Eight tests, about 2 seconds, numpy only. They compare `get_global_pos` with an independent construction (Rodrigues' formula) and check:
+
+| Check | Tolerance | Result (2026-10-23) |
+|---|---|---|
+| each rotation matrix is a proper rotation over -360 to 360 degrees (`MᵀM = I`, `det = 1`) | 1e-12 | 2.2e-16 largest deviation in a separate run of the same check |
+| the chain order matches the docstring for random motor states | 1e-12 | 3.6e-15 largest deviation, 1000 states, separate run |
+| a point on the `th` axis does not move with `th`; a point on the `phi` axis does not move with `phi` | 1e-12 | 1.3e-15 largest deviation, separate run |
+
+The "result" column comes from the pre-registered check the author's physics review ran on commit f1adc41 with scipy's `Rotation` as the independent implementation; `tests/test_sample.py` repeats the same three checks with numpy only and passes, and a swapped `th`/`chi` order in `sample.py` makes the order test fail. The tests establish that the code does what the docstring says; they cannot say that the docstring describes the real stage.
+
+## Layout
+
+```
+motor.py            Motor, BeamlineState, MotorManager
+sample.py           Sample and the kinematic chain
+tests/test_sample.py
+conftest.py         puts this directory on sys.path for the tests
+```
