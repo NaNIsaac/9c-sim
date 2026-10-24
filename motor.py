@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field, model_validator, ConfigDict
-
 from typing import Self
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Motor(BaseModel):
@@ -10,7 +10,7 @@ class Motor(BaseModel):
     current_pos: float = 0.0
     min_limit: float = Field(default=-float("inf"), description="Soft limit min")
     max_limit: float = Field(default=float("inf"), description="Soft limit max")
-    
+
     @model_validator(mode="after")
     def check_range(self) -> Self:
         if not (self.min_limit <= self.current_pos <= self.max_limit):
@@ -37,7 +37,7 @@ class MotorManager:
         try:
             return getattr(self._state, name)
         except AttributeError:
-            raise ValueError(f"❌ '{name}' is not defined in 9C Beamline")
+            raise ValueError(f"❌ '{name}' is not defined in 9C Beamline") from None
 
     def move(self, name: str, pos: float) -> None:
         motor = self._get_motor_instance(name)
@@ -53,10 +53,7 @@ class MotorManager:
 
     def get_all_motors(self) -> dict[str, Motor]:
         # Pydantic 모델의 필드들을 순회하며 객체 참조 딕셔너리 생성
-        return {
-            field: getattr(self._state, field) 
-            for field in self._state.model_fields
-        }
+        return {field: getattr(self._state, field) for field in self._state.model_fields}
 
     def wh(self):
         print(f"{'Motor':<10} {'Position':<10}")
