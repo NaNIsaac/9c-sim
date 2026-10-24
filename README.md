@@ -1,6 +1,14 @@
 # 9c-sim
 
-A small kinematic model of the sample stage of the PAL 9C beamline diffractometer, as it stands now (2026-10-23). It exists to answer one question in code: given the positions of the sample motors, where is the sample origin in the laboratory frame? The rocking-scan simulator that needs this is a separate repository (rocking_xrd_sim).
+An early kinematic component of a **configurable beamline digital twin**. The PAL 9C sample stage is a concrete reference configuration, not a promise of one-to-one fidelity with the continuously evolving instrument. The current code answers one narrow question: given sample motor positions, where is the sample origin in the laboratory frame? The rocking-scan simulator is a separate repository (`rocking_xrd_sim`).
+
+## Scope and direction
+
+- **Implemented today:** six-motor state, soft-limit checks, and one sample-stage homogeneous-transform chain.
+- **Next:** separate generic frame/motor kinematics from beamline-specific configurations; validate configurations against available instrument references when appropriate.
+- **Long-term:** configurable beamlines with beam, sample, detector, scans, and simulated measurements; reusable for research planning, education, and a beamline-scientist simulation game.
+- **Boundaries:** instrument configuration and game/economy logic should not be hardcoded into the core kinematic mathematics. Keep any assumed geometry explicitly labeled; no claim that this is a calibrated PAL 9C instrument model.
+
 
 - `motor.py`: `Motor` (pydantic) with a position and soft limits that are checked on every assignment; `BeamlineState` with the six motors `th`, `phi`, `chi`, `shold`, `sx`, `sy`; `MotorManager` with `move`, `get_pos` and a `wh` printout.
 - `sample.py`: `Sample.get_global_pos`, the 4x4 homogeneous kinematic chain applied to the sample origin.
