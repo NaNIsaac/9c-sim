@@ -41,7 +41,7 @@ class MotorManager:
 
     def move(self, name: str, pos: float) -> None:
         motor = self._get_motor_instance(name)
-        # 이 할당 시점에 Pydantic의 @model_validator가 리밋을 체크합니다.
+        # The assignment runs the Pydantic @model_validator, which checks the limits.
         motor.current_pos = pos
         print(f"Motor {name} moved to {pos}")
 
@@ -52,7 +52,6 @@ class MotorManager:
         return self._get_motor_instance(name)
 
     def get_all_motors(self) -> dict[str, Motor]:
-        # Pydantic 모델의 필드들을 순회하며 객체 참조 딕셔너리 생성
         return {field: getattr(self._state, field) for field in self._state.model_fields}
 
     def wh(self):
