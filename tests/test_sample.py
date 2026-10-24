@@ -24,7 +24,9 @@ def rotation(axis: str, degrees: float) -> np.ndarray:
 
 
 def state(**positions: float) -> BeamlineState:
-    return BeamlineState(**{name: Motor(name=name, current_pos=pos) for name, pos in positions.items()})
+    return BeamlineState(
+        **{name: Motor(name=name, current_pos=pos) for name, pos in positions.items()}
+    )
 
 
 @pytest.mark.parametrize("axis", ["x", "y", "z"])
