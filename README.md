@@ -17,6 +17,12 @@ There is no detector arm, no q calculation and no diffraction calculation here. 
 
 ## Geometry convention
 
+![The currently implemented sample-origin transform chain in the laboratory frame](docs/media/sample-chain.svg)
+
+*Code-derived transform order; conceptual diagram, not calibrated stage geometry.*
+
+
+
 `get_global_pos` returns `T(th) T(chi) T(phi) T(translation)` applied to the sample origin `(0, 0, 0, 1)`, which is the chain `Lab <- th <- chi <- phi <- translation <- Sample`. Angles are in degrees; each rotation is right-handed about the axis named in the table, written in the frame of the stage it moves; lengths are in the unit of the motor positions (the code does not define one).
 
 | Step | Motor | Operation |
