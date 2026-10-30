@@ -2,6 +2,14 @@
 
 An early kinematic component of a **configurable beamline digital twin**. The PAL 9C sample stage is a concrete reference configuration, not a promise of one-to-one fidelity with the continuously evolving instrument. The current code answers one narrow question: given sample motor positions, where is the sample origin in the laboratory frame? The rocking-scan simulator is a separate repository (`rocking_xrd_sim`).
 
+## Kinematic chain at a glance
+
+![The sample position is computed by applying the translation first, followed by phi, chi and th rotations.](docs/media/readme-overview.svg)
+
+The sample position is computed by applying the translation first, followed by phi, chi and th rotations.
+
+In code, the product is `T(th) @ T(chi) @ T(phi) @ T(translation) @ [0, 0, 0, 1]`. Here `T(th)`, `T(chi)` and `T(phi)` denote rotation matrices. Verify real motor axes and signs before using lab coordinates.
+
 ## Scope and direction
 
 - **Implemented today:** six-motor state, soft-limit checks, and one sample-stage homogeneous-transform chain.
