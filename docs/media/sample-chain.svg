@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="510" viewBox="0 0 1200 510" role="img" aria-labelledby="t d"><title id="t">9c-sim: implemented sample-origin transform chain</title><desc id="d">Lab coordinate rotation th, rotation chi minus 90, rotation phi, and translation; this is a model, not calibrated 9C geometry.</desc>
+<rect x="0" y="0" width="1200" height="510" rx="0" fill="#f8fafc" stroke="#f8fafc" stroke-width="2"/>
+<text x="36" y="55" fill="#153a5a" font-size="31" font-family="Arial, sans-serif" font-weight="700">9c-sim / sample origin kinematics</text>
+<text x="36" y="85" fill="#4a6680" font-size="18" font-family="Arial, sans-serif" font-weight="400">The actual code multiplies transforms from the lab frame to the sample origin.</text>
+<rect x="33" y="143" width="270" height="173" rx="18" fill="#ffffff" stroke="#c8ddea" stroke-width="2"/>
+<text x="48" y="183" fill="#17527d" font-size="24" font-family="Arial, sans-serif" font-weight="700">T(th)</text>
+<text x="48" y="225" fill="#35586e" font-size="18" font-family="Arial, sans-serif" font-weight="400">rotate about y</text>
+<text x="48" y="262" fill="#35586e" font-size="18" font-family="Consolas, monospace" font-weight="500">th degrees</text>
+<path d="M 307 227 h 23 l -9 -8 m 9 8 l -9 8" stroke="#4c8ab7" stroke-width="3" fill="none"/>
+<rect x="334" y="143" width="270" height="173" rx="18" fill="#ffffff" stroke="#c8ddea" stroke-width="2"/>
+<text x="349" y="183" fill="#17527d" font-size="24" font-family="Arial, sans-serif" font-weight="700">T(chi)</text>
+<text x="349" y="225" fill="#35586e" font-size="18" font-family="Arial, sans-serif" font-weight="400">rotate about z</text>
+<text x="349" y="262" fill="#35586e" font-size="18" font-family="Consolas, monospace" font-weight="500">chi - 90 degrees</text>
+<path d="M 608 227 h 23 l -9 -8 m 9 8 l -9 8" stroke="#4c8ab7" stroke-width="3" fill="none"/>
+<rect x="635" y="143" width="270" height="173" rx="18" fill="#ffffff" stroke="#c8ddea" stroke-width="2"/>
+<text x="650" y="183" fill="#17527d" font-size="24" font-family="Arial, sans-serif" font-weight="700">T(phi)</text>
+<text x="650" y="225" fill="#35586e" font-size="18" font-family="Arial, sans-serif" font-weight="400">rotate about y</text>
+<text x="650" y="262" fill="#35586e" font-size="18" font-family="Consolas, monospace" font-weight="500">phi degrees</text>
+<path d="M 909 227 h 23 l -9 -8 m 9 8 l -9 8" stroke="#4c8ab7" stroke-width="3" fill="none"/>
+<rect x="936" y="143" width="270" height="173" rx="18" fill="#ffffff" stroke="#c8ddea" stroke-width="2"/>
+<text x="951" y="183" fill="#17527d" font-size="24" font-family="Arial, sans-serif" font-weight="700">T(translation)</text>
+<text x="951" y="225" fill="#35586e" font-size="18" font-family="Arial, sans-serif" font-weight="400">translate sample</text>
+<text x="951" y="262" fill="#35586e" font-size="18" font-family="Consolas, monospace" font-weight="500">(0, sy+shold, sx)</text>
+<rect x="33" y="348" width="1135" height="122" rx="14" fill="#19334b" stroke="#19334b" stroke-width="2"/>
+<text x="57" y="385" fill="#e6f3ff" font-size="19" font-family="Consolas, monospace" font-weight="500">Lab position = T(th) · T(chi) · T(phi) · T(translation) · [0, 0, 0, 1]</text>
+<text x="57" y="420" fill="#bfdbef" font-size="18" font-family="Consolas, monospace" font-weight="400">uv run sample.py         # illustrative entry point; output is a 4-vector</text>
+<text x="57" y="453" fill="#ffe0a1" font-size="16" font-family="Arial, sans-serif" font-weight="500">NOT a calibrated PAL 9C instrument. No detector arm, q mapping or diffraction physics.</text></svg>
