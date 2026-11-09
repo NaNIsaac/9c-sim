@@ -80,3 +80,19 @@ def test_motor_limits_are_checked_on_assignment():
     motor.current_pos = 10.0
     with pytest.raises(ValueError, match="out of range"):
         motor.current_pos = 10.5
+
+
+@pytest.mark.parametrize("invalid", [float("inf"), -float("inf"), float("nan")])
+def test_motor_rejects_nonfinite_positions_at_creation(invalid):
+    with pytest.raises(ValueError, match="position must be finite"):
+        Motor(name="th", current_pos=invalid)
+
+
+@pytest.mark.parametrize("invalid", [float("inf"), -float("inf"), float("nan")])
+def test_motor_rejects_nonfinite_positions_on_move(invalid):
+    from motor import MotorManager
+
+    state = BeamlineState()
+    manager = MotorManager(state)
+    with pytest.raises(ValueError, match="position must be finite"):
+        manager.move("th", invalid)
