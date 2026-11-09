@@ -1,3 +1,4 @@
+from math import isfinite
 from typing import Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -13,6 +14,8 @@ class Motor(BaseModel):
 
     @model_validator(mode="after")
     def check_range(self) -> Self:
+        if not isfinite(self.current_pos):
+            raise ValueError(f"motor [{self.name}] position must be finite")
         if not (self.min_limit <= self.current_pos <= self.max_limit):
             raise ValueError(
                 f"motor [{self.name}] out of range!\nTarget:{self.current_pos}, Range: [{self.min_limit}, {self.max_limit}]"
